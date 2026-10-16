@@ -1,0 +1,76 @@
+# ================================================================
+# Dependencias
+# ================================================================
+node_modules/
+
+# ================================================================
+# Backend compilado (Maven)
+# ================================================================
+target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+.kotlin
+
+# ================================================================
+# Clon anidado accidental (mismo repo dentro de Backend/) — no es
+# un submódulo real, no debe trackearse desde el repo raíz.
+# ================================================================
+/Backend/Aplicativo_de_Veterinaria/
+
+# Maven Wrapper
+!.mvn/wrapper/maven-wrapper.jar
+
+# ================================================================
+# Frontend compilado (Vite / TypeScript)
+# ================================================================
+dist/
+dist-ssr/
+.vite/
+*.tsbuildinfo
+
+# ================================================================
+# Variables de entorno
+# ================================================================
+.env
+.env.*
+!.env.example
+*.local
+
+# ================================================================
+# IDEs (IntelliJ IDEA)
+# ================================================================
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# IDEs (Eclipse)
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# IDEs (NetBeans)
+nbproject/private/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+# IDEs (VS Code)
+.vscode/
+
+# IntelliJ Smart Tomcat
+.smarttomcat/
+
+# ================================================================
+# Sistema operativo
+# ================================================================
+.DS_Store
+Thumbs.db
+
+# Variables privadas del proyecto
+.env
+*.env
+!.env.example
