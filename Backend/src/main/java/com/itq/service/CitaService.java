@@ -95,6 +95,8 @@ public class CitaService {
                 obj.getIdEmpresa()
         );
 
+        validarNoDuplicada(obj, null);
+
         return dao.insertar(obj);
     }
 
@@ -129,6 +131,8 @@ public class CitaService {
                     obj.getIdEmpresa()
             );
 
+            validarNoDuplicada(obj, obj.getIdCita());
+
             return dao.actualizar(obj);
         }
 
@@ -159,6 +163,8 @@ public class CitaService {
                 obj.getIdVeterinario(),
                 idEmpresa
         );
+
+        validarNoDuplicada(obj, obj.getIdCita());
 
         return dao.actualizarPorEmpresa(
                 obj,
@@ -245,6 +251,29 @@ public class CitaService {
 
             throw new IllegalArgumentException(
                     "No puedes mover la cita a una fecha anterior a la que estaba agendada"
+            );
+        }
+    }
+
+    /**
+     * Impide crear o mover una cita a un día y hora ya ocupados por el mismo
+     * veterinario de la misma empresa. La comparación es a minuto de precisión
+     * sobre el instante almacenado. Al editar se excluye la propia cita.
+     */
+    private void validarNoDuplicada(
+            Cita obj,
+            UUID idCitaExcluir
+    ) throws SQLException {
+
+        if (dao.existeDuplicada(
+                obj.getIdEmpresa(),
+                obj.getIdVeterinario(),
+                obj.getFechaHora(),
+                idCitaExcluir
+        )) {
+
+            throw new IllegalArgumentException(
+                    "Ya existe una cita para este veterinario el mismo día a la misma hora"
             );
         }
     }

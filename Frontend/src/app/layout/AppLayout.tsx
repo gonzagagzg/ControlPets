@@ -255,7 +255,7 @@ export function AppLayout() {
 
       <div className="flex min-h-screen flex-col">
         {/* Barra superior (solo móvil/tablet) */}
-        <header className="sticky top-0 z-30 flex items-center justify-between gap-2 bg-gradient-to-r from-brand-700 to-brand-900 px-2.5 py-2.5 text-white shadow-md lg:hidden">
+        <header className="sticky top-0 flex items-center justify-between gap-2 bg-gradient-to-r from-brand-700 to-brand-900 px-2.5 py-2.5 text-white shadow-md lg:hidden z-1">
           <button
             type="button"
             onClick={() => setMenuAbierto(true)}
@@ -292,7 +292,7 @@ export function AppLayout() {
 
           <main className="min-w-0 flex-1">
             {/* Barra superior de escritorio: breadcrumb + identidad de sesión */}
-            <header className="cristal sticky top-0 z-20 hidden items-center justify-between gap-4 border-b border-slate-200/70 px-8 py-3 lg:flex">
+            <header className="cristal sticky top-0 hidden items-center justify-between gap-4 border-b border-slate-200/70 px-8 py-3 lg:flex">
               <nav aria-label="Ruta de navegación" className="flex items-center gap-1.5 text-sm">
                 <span className="text-slate-400">{itemActual?.seccion ?? 'General'}</span>
                 <ChevronRight className="h-3.5 w-3.5 text-slate-300" />

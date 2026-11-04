@@ -25,13 +25,13 @@ export function PaginaCatalogos() {
         descripcion="Tablas maestras que alimentan el resto de módulos"
       />
 
-      <div className="mb-6 flex gap-1 border-b border-slate-200">
+      <div className="mb-4 flex flex-nowrap gap-1 overflow-x-auto pb-1 border-b border-slate-200 scrollbar-hide">
         {PESTANIAS.map((p) => (
           <button
             key={p}
             onClick={() => setActiva(p)}
             className={cn(
-              '-mb-px border-b-2 px-3.5 py-2 text-sm font-medium transition-colors',
+              '-mb-px border-b-2 shrink-0 px-3 py-2 text-xs sm:text-sm font-medium transition-colors whitespace-nowrap',
               activa === p
                 ? 'border-brand-600 text-brand-700'
                 : 'border-transparent text-slate-500 hover:text-slate-800',

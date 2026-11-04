@@ -34,6 +34,19 @@ const TONO_ESTADO: Record<string, 'alerta' | 'exito' | 'peligro' | 'neutro'> = {
 }
 
 /**
+ * Normaliza una fecha/hora ISO a 'YYYY-MM-DDTHH:mm' en hora local.
+ * Sirve para comparar si dos citas coinciden en el mismo día y la misma hora
+ * sin depender de offsets de zona horaria.
+ */
+function claveDiaHora(iso: string | null | undefined): string | null {
+  if (!iso) return null
+  const d = new Date(iso)
+  if (Number.isNaN(d.getTime())) return null
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
+
+/**
  * Agenda semanal.
  *
  * Es la pantalla que más se aparta del CRUD genérico porque el valor está en
@@ -49,6 +62,7 @@ export function PaginaCitas() {
   )
   const [modalAbierto, setModalAbierto] = useState(false)
   const [citaEditada, setCitaEditada] = useState<Cita | null>(null)
+  const [errorDuplicado, setErrorDuplicado] = useState<string | null>(null)
   const [filtroVeterinario, setFiltroVeterinario] = useState('')
 
   const citas = citasApi.useLista()
@@ -132,6 +146,7 @@ export function PaginaCitas() {
             onClick={() => {
               setCitaEditada(null)
               crear.reset()
+              setErrorDuplicado(null)
               setModalAbierto(true)
             }}
           >
@@ -309,6 +324,7 @@ export function PaginaCitas() {
         onCerrar={() => setModalAbierto(false)}
         ancho="max-w-2xl"
       >
+        {errorDuplicado && <MensajeError error={new Error(errorDuplicado)} />}
         <FormularioCrud<Cita>
           edicion={Boolean(citaEditada)}
           valoresIniciales={citaEditada ?? { estado: 'Pendiente' }}
@@ -316,6 +332,33 @@ export function PaginaCitas() {
           error={crear.error ?? actualizar.error}
           onCancelar={() => setModalAbierto(false)}
           onEnviar={(datos) => {
+            const idVeterinario = datos.idVeterinario
+            const fechaHora = datos.fechaHora as string | undefined
+            const claveNueva = claveDiaHora(fechaHora)
+
+            // No hay cita duplicada si faltan datos obligatorios (el formulario
+            // ya los valida) o no se puede normalizar la fecha/hora.
+            if (!idVeterinario || !claveNueva) return
+
+            const citasEmpresa = (citas.data ?? []).filter(
+              (c) => c.idEmpresa === idEmpresa,
+            )
+
+            const duplicada = citasEmpresa.find((c) => {
+              // Al editar se ignora la propia cita que se está modificando.
+              if (citaEditada && c.idCita === citaEditada.idCita) return false
+              if (c.idVeterinario !== idVeterinario) return false
+              return claveDiaHora(c.fechaHora) === claveNueva
+            })
+
+            if (duplicada) {
+              setErrorDuplicado(
+                'Ya existe una cita para este veterinario el mismo día a la misma hora. Elija otro horario.',
+              )
+              return
+            }
+            setErrorDuplicado(null)
+
             if (citaEditada) {
               actualizar.mutate(
                 { id: citaEditada.idCita, datos: { ...citaEditada, ...datos } },

@@ -579,8 +579,3 @@ SELECT * FROM factura_detalle;
 -- 22. MOVIMIENTO_INVENTARIO
 SELECT * FROM movimiento_inventario;
 
-DELETE FROM public.empresa
-WHERE ruc='0869322530001';
-
-DELETE FROM public.usuario
-WHERE id_usuario='eeefde11-62a9-4525-9bdf-72c0ebe80684';

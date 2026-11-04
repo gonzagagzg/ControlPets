@@ -122,6 +122,10 @@ export default {
       },
       // Curva "expo-out": rápida al inicio y muy suave al final. Da el aire
       // profesional (Linear/Stripe) a las entradas y los hovers.
+      zIndex: {
+        // Modal siempre por encima de headers y cualquier otro elemento
+        modal: '9999',
+      },
       transitionTimingFunction: {
         suave: 'cubic-bezier(0.16, 1, 0.3, 1)',
       },
