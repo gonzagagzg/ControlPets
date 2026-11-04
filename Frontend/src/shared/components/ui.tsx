@@ -158,7 +158,7 @@ export function Modal({
   descripcion,
   onCerrar,
   children,
-  ancho = 'max-w-lg',
+  ancho = 'max-w-md',
 }: {
   abierto: boolean
   titulo: string
@@ -170,31 +170,38 @@ export function Modal({
   if (!abierto) return null
 
   return (
-    <div className="animate-aparecer fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-brand-950/60 p-3 backdrop-blur-sm sm:p-8">
+    <div className="animate-aparecer fixed inset-0 z-modal flex items-center justify-center overflow-y-auto bg-brand-950/60 p-2 sm:p-3 md:p-8 backdrop-blur-sm touch-auto">
       <div
         role="dialog"
         aria-modal="true"
         aria-label={titulo}
         className={cn(
           'animate-escala w-full rounded-xl bg-white shadow-2xl ring-1 ring-slate-200',
-          'my-auto max-h-[calc(100dvh-1.5rem)] overflow-y-auto sm:max-h-[calc(100dvh-4rem)]',
-          ancho,
+          // Ancho por defecto para móvil; si se pasa `ancho` se aplica directamente en todos los tamaños
+          'max-w-xs sm:max-w-md md:max-w-lg',
+          ancho ? ancho : '',
+          // Centrado horizontal con márgenes automáticos
+          'ml-auto mr-auto',
+          // Espacio arriba para no tapar el header fijo; espacio abajo para borde de pantalla
+          'mt-8 mb-4 sm:mt-0 sm:mb-0 max-h-[calc(100dvh-4rem)] overflow-y-auto sm:max-h-[calc(100dvh-3rem)] md:max-h-[calc(100dvh-4rem)]',
         )}
       >
-        <div className="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-slate-100 bg-white/95 px-5 py-4 backdrop-blur sm:px-6">
-          <div className="min-w-0">
-            <h2 className="text-base font-semibold text-slate-900">{titulo}</h2>
-            {descripcion && <p className="mt-0.5 text-sm text-slate-500">{descripcion}</p>}
+        <div className="z-modal flex items-start justify-between gap-3 border-b border-slate-100 bg-white/95 px-4 py-3 sm:px-6 sm:py-4 backdrop-blur">
+          <div className="min-w-0 z-modal">
+            <h2 className="text-sm sm:text-base font-semibold text-slate-900">{titulo}</h2>
+            {descripcion && (
+              <p className="mt-0.5 text-xs sm:text-sm text-slate-500">{descripcion}</p>
+            )}
           </div>
           <button
             onClick={onCerrar}
             aria-label="Cerrar"
-            className="shrink-0 rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
+            className="z-modal shrink-0 rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
-        <div className="px-5 py-5 sm:px-6">{children}</div>
+        <div className="px-4 py-4 sm:px-6 sm:py-5">{children}</div>
       </div>
     </div>
   )
